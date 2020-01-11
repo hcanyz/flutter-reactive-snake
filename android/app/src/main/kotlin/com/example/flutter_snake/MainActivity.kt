@@ -1,4 +1,4 @@
-package com.example.flutter_snake
+package com.example.flutter_reactive_snake
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
