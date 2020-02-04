@@ -95,7 +95,7 @@ class Game {
     }).share();
 
     //游戏分数，🐍的长度就是游戏的分数
-    Stream<int> _score$ = _$apple
+    Stream<int> _score$ = _snake$
         .map((snake) {
           return snake.length;
         })
