@@ -49,6 +49,20 @@ class _Paint extends CustomPainter {
     for (var point in _scene.apple) {
       canvas.drawRect(realPointRect(point), _paint);
     }
+
+    //分数
+    _paint.color = Colors.grey;
+    TextSpan span = new TextSpan(
+        text: _scene.score.toString(), style: TextStyle(color: Colors.white54));
+    TextPainter tp = new TextPainter(
+        text: span,
+        textDirection: TextDirection.ltr,
+        textAlign: TextAlign.center);
+    tp.layout();
+    tp.paint(
+        canvas,
+        new Offset(
+            size.width / 2 - tp.width / 2, size.height / 2 - tp.height / 2));
   }
 
   Rect realPointRect(Point point) {

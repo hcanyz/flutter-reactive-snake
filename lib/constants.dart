@@ -8,7 +8,7 @@ const List<Point<int>> SNAKE_INIT = [Point(0, 0), Point(1, 0), Point(2, 0)];
 
 //🍎的初始值
 const List<Point<int>> APPLE_INIT = [
-  Point(33 % GAME_HEIGHT, 33 % GAME_HEIGHT),
+  Point(11 % GAME_HEIGHT, 11 % GAME_HEIGHT),
   Point(55 % GAME_WIDTH, 55 % GAME_HEIGHT)
 ];
 
