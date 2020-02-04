@@ -26,6 +26,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    start();
+  }
+
+  void start() {
     _game = Game();
     _gameSubscription = _game.createGame().listen((scene) {
       print(scene);
@@ -65,6 +69,8 @@ class _MyAppState extends State<MyApp> {
                 onKeyDownEvent: (logicalKeyboardKey) {
                   if (!_game.keyDownController.isClosed) {
                     _game.keyDownController.add(logicalKeyboardKey);
+                  } else {
+                    start();
                   }
                 },
               ),
