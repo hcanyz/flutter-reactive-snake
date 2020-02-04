@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart';
 import 'game.dart';
+import 'game_canvas.dart';
 import 'game_pad.dart';
-import 'snake_canvas.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,6 +19,8 @@ class _MyAppState extends State<MyApp> {
 
   Scene _scene;
 
+  bool _isGameOver = false;
+
   StreamSubscription _gameSubscription;
 
   @override
@@ -28,7 +30,12 @@ class _MyAppState extends State<MyApp> {
     _gameSubscription = _game.createGame().listen((scene) {
       print(scene);
       setState(() {
+        _isGameOver = false;
         _scene = scene;
+      });
+    }, onDone: () {
+      setState(() {
+        _isGameOver = true;
       });
     });
   }
@@ -48,14 +55,17 @@ class _MyAppState extends State<MyApp> {
             Container(
               margin: EdgeInsets.only(top: 100),
               alignment: Alignment.topCenter,
-              child: Snake(_scene, Size(GAME_WIDTH_PIXEL, GAME_HEIGHT_PIXEL)),
+              child: SnakeGameWidget(_scene, _isGameOver,
+                  Size(GAME_WIDTH_PIXEL, GAME_HEIGHT_PIXEL)),
             ),
             Container(
               alignment: Alignment.bottomCenter,
               margin: EdgeInsets.only(bottom: 100),
               child: GamePad(
                 onKeyDownEvent: (logicalKeyboardKey) {
-                  _game.keyDownController.add(logicalKeyboardKey);
+                  if (!_game.keyDownController.isClosed) {
+                    _game.keyDownController.add(logicalKeyboardKey);
+                  }
                 },
               ),
             )

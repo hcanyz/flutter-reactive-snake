@@ -17,11 +17,11 @@ class Game {
     Stream<int> _ticks$ = Stream.periodic(Duration(milliseconds: TICKS_TICKS),
         (computationCount) => computationCount);
 
-    //输入按键事件流,根据按键返回一个x,y方向变化值,过滤了无意义按键，过滤了与当前方向相同的按键
+    Stream<LogicalKeyboardKey> _keyDown = keyDownController.stream.share();
+    //输入按键事件流,根据按键返回一个x,y方向变化值,过滤了无意义按键，过滤了与当前方向相同的按键，过滤了相反方向无效按键
     //初始化一个右箭头事件
-    Stream<Map<String, int>> _direction$ = keyDownController.stream
-        .startWith(LogicalKeyboardKey.arrowRight)
-        .map((key) {
+    Stream<Map<String, int>> _direction$ =
+        _keyDown.startWith(LogicalKeyboardKey.arrowRight).map((key) {
       if (key == LogicalKeyboardKey.arrowUp) {
         return const {"x": 0, "y": -1};
       } else if (key == LogicalKeyboardKey.arrowDown) {
@@ -33,8 +33,21 @@ class Game {
       }
       return null;
     }).where((change) {
+      //过滤无效按键
       return change != null;
-    }).distinct();
+    }).scan((Map<String, int> accumulated, Map<String, int> value, index) {
+      if (accumulated == null) return value;
+      //x轴是否相同方向
+      bool xD = value["x"] * accumulated["x"] >= 0;
+      //y轴是否相同方向
+      bool yD = value["y"] * accumulated["y"] >= 0;
+      //过滤相同方向，相反方向
+      if (xD != yD) {
+        return accumulated;
+      } else {
+        return value;
+      }
+    }, null);
 
     var _snakeEatApple = BehaviorSubject<Point<int>>.seeded(null);
 
@@ -58,12 +71,15 @@ class Game {
       Map<String, int> direction = factor[0];
       Point<int> eatApple = factor[1];
       if (eatApple == null) {
+        //没有🍎就继续前进
         snake.removeFirst();
         Point<int> last = snake.last;
         snake.addLast(Point<int>((last.x + direction["x"]) % GAME_WIDTH,
             (last.y + direction["y"]) % GAME_HEIGHT));
       } else {
-        snake.addLast(eatApple);
+        //吃到了🍎，🐍的前进方向加一格
+        snake.addLast(Point<int>((eatApple.x + direction["x"]) % GAME_WIDTH,
+            (eatApple.y + direction["y"]) % GAME_HEIGHT));
         //fixme 更好的办法解决吃🍎事件一直循环问题
         _snakeEatApple.add(null);
       }
@@ -107,6 +123,8 @@ class Game {
     return Rx.combineLatest3(_snake$, _$apple, _score$,
         (Queue<Point<int>> snake, List<Point<int>> apple, int score) {
       return Scene(snake, apple, score);
+    }).takeWhile((element) {
+      return element.snake.toSet().length == element.snake.length;
     }).doOnCancel(() {
       _snakeEatApple.close();
       keyDownController.close();

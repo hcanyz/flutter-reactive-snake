@@ -5,38 +5,57 @@ import 'package:flutter_reactive_snake/constants.dart';
 
 import 'game.dart';
 
-class Snake extends StatefulWidget {
+class SnakeGameWidget extends StatefulWidget {
   final Scene _scene;
+  final bool _isGameOver;
   final Size _size;
 
-  Snake(this._scene, this._size);
+  SnakeGameWidget(this._scene, this._isGameOver, this._size);
 
   @override
-  _SnakeState createState() => _SnakeState();
+  _SnakeGameWidgetState createState() => _SnakeGameWidgetState();
 }
 
-class _SnakeState extends State<Snake> {
+class _SnakeGameWidgetState extends State<SnakeGameWidget> {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       size: widget._size,
-      painter: _Paint(widget._scene),
+      painter: _Paint(widget._scene, widget._isGameOver),
     );
   }
 }
 
 class _Paint extends CustomPainter {
   Scene _scene;
+  bool _isGameOver;
   Paint _paint = Paint();
 
-  _Paint(this._scene);
+  _Paint(this._scene, this._isGameOver);
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (_scene == null) return;
     //背景
     _paint.color = Colors.blue;
     canvas.drawRect(Offset.zero & size, _paint);
+
+    if (_isGameOver) {
+      //游戏结束
+      TextSpan span =
+          new TextSpan(text: "game over!", style: TextStyle(color: Colors.red));
+      TextPainter tp = new TextPainter(
+          text: span,
+          textDirection: TextDirection.ltr,
+          textAlign: TextAlign.center);
+      tp.layout();
+      tp.paint(
+          canvas,
+          new Offset(
+              size.width / 2 - tp.width / 2, size.height / 2 - tp.height / 2));
+      return;
+    }
+
+    if (_scene == null) return;
 
     //🐍
     _paint.color = Colors.white;
@@ -51,7 +70,6 @@ class _Paint extends CustomPainter {
     }
 
     //分数
-    _paint.color = Colors.grey;
     TextSpan span = new TextSpan(
         text: _scene.score.toString(), style: TextStyle(color: Colors.white54));
     TextPainter tp = new TextPainter(
@@ -74,6 +92,6 @@ class _Paint extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
+    return !_isGameOver;
   }
 }
