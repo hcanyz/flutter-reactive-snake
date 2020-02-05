@@ -63,7 +63,7 @@ class _Paint extends CustomPainter {
     for (int i = 0; i < snake.length; i++) {
       var point = snake.elementAt(i);
       if (point == snake.last) {
-        canvas.drawRRect(RRect.fromRectXY(realPointRect(point), 3, 3), _paint);
+        canvas.drawRRect(RRect.fromRectXY(realPointRect(point), 2, 2), _paint);
       } else {
         canvas.drawRect(realPointRect(point), _paint);
       }
@@ -93,7 +93,7 @@ class _Paint extends CustomPainter {
     double x = point.x.toDouble();
     double y = point.y.toDouble();
     return Rect.fromPoints(Offset(x * GAME_PIXEL_SIZE, y * GAME_PIXEL_SIZE),
-        Offset((x + 1) * GAME_PIXEL_SIZE + 1, (y + 1) * GAME_PIXEL_SIZE + 1));
+        Offset((x + 1) * GAME_PIXEL_SIZE, (y + 1) * GAME_PIXEL_SIZE));
   }
 
   @override
