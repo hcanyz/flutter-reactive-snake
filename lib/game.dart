@@ -78,8 +78,8 @@ class Game {
             (last.y + direction["y"]) % GAME_HEIGHT));
       } else {
         //吃到了🍎，🐍的前进方向加一格
-        snake.addLast(Point<int>((eatApple.x + direction["x"]) % GAME_WIDTH,
-            (eatApple.y + direction["y"]) % GAME_HEIGHT));
+        snake.addLast(Point<int>((snake.last.x + direction["x"]) % GAME_WIDTH,
+            (snake.last.y + direction["y"]) % GAME_HEIGHT));
         //fixme 更好的办法解决吃🍎事件一直循环问题
         _snakeEatApple.add(null);
       }
@@ -90,6 +90,7 @@ class Game {
     Stream<List<Point<int>>> _$apple = _snake$.scan(
         (List<Point<int>> apple, Queue<Point<int>> snake, int index) {
       var appleN = List<Point<int>>.from(apple);
+      var random = Random();
       for (var value in apple) {
         if (snake.contains(value)) {
           //🐍接触到🍎，则生成新到🍎，新🍎不会生成到老位置和🐍到位置上
@@ -97,12 +98,23 @@ class Game {
           Point<int> newApple;
           do {
             newApple = Point<int>(
-                Random().nextInt(GAME_WIDTH), Random().nextInt(GAME_HEIGHT));
+                random.nextInt(GAME_WIDTH), random.nextInt(GAME_HEIGHT));
           } while (newApple == value || snake.contains(newApple));
           appleN.add(newApple);
           //发送一个🐍吃🍎事件
           _snakeEatApple.add(value);
           break;
+        }
+      }
+      for (int i = 0; i < appleN.length; i++) {
+        //苹果随机移动位置= =
+        if (random.nextInt(10) == 0) {
+          var randomPoint = Point(
+              (appleN[i].x + (random.nextBool() ? 1 : -1)) % GAME_WIDTH,
+              (appleN[i].y + (random.nextBool() ? 1 : -1)) % GAME_HEIGHT);
+          if (!appleN.contains(randomPoint)) {
+            appleN[i] = randomPoint;
+          }
         }
       }
       return appleN;
