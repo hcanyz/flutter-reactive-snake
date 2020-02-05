@@ -108,7 +108,7 @@ class Game {
       return appleN;
     }, APPLE_INIT).distinct((List<Point<int>> a1, List<Point<int>> a2) {
       return listEquals(a1, a2);
-    }).share();
+    });
 
     //游戏分数，🐍的长度就是游戏的分数
     Stream<int> _score$ = _snake$

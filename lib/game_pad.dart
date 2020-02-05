@@ -14,70 +14,46 @@ class GamePad extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FlatButton(
-              onPressed: () {
-                if (onKeyDownEvent != null) {
-                  onKeyDownEvent(LogicalKeyboardKey.arrowUp);
-                }
-              },
-              child: Icon(
-                Icons.arrow_upward,
-                size: 50,
-                color: Theme.of(context).primaryColor,
-              ),
-            )
+            createButton(
+                context, LogicalKeyboardKey.arrowUp, Icons.arrow_upward)
           ],
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FlatButton(
-              onPressed: () {
-                if (onKeyDownEvent != null) {
-                  onKeyDownEvent(LogicalKeyboardKey.arrowLeft);
-                }
-              },
-              child: Icon(
-                Icons.arrow_back,
-                size: 50,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
+            createButton(
+                context, LogicalKeyboardKey.arrowLeft, Icons.arrow_back),
             ConstrainedBox(
               constraints: BoxConstraints(minWidth: 20),
             ),
-            FlatButton(
-              onPressed: () {
-                if (onKeyDownEvent != null) {
-                  onKeyDownEvent(LogicalKeyboardKey.arrowRight);
-                }
-              },
-              child: Icon(
-                Icons.arrow_forward,
-                size: 50,
-                color: Theme.of(context).primaryColor,
-              ),
-            )
+            createButton(
+                context, LogicalKeyboardKey.arrowRight, Icons.arrow_forward)
           ],
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FlatButton(
-              onPressed: () {
-                if (onKeyDownEvent != null) {
-                  onKeyDownEvent(LogicalKeyboardKey.arrowDown);
-                }
-              },
-              child: Icon(
-                Icons.arrow_downward,
-                size: 50,
-                color: Theme.of(context).primaryColor,
-              ),
-            )
+            createButton(
+                context, LogicalKeyboardKey.arrowDown, Icons.arrow_downward)
           ],
         )
       ],
+    );
+  }
+
+  FlatButton createButton(
+      BuildContext context, LogicalKeyboardKey key, IconData icon) {
+    return FlatButton(
+      onPressed: () {
+        if (onKeyDownEvent != null) {
+          onKeyDownEvent(key);
+        }
+      },
+      child: Icon(
+        icon,
+        size: 50,
+        color: Theme.of(context).primaryColor,
+      ),
     );
   }
 }

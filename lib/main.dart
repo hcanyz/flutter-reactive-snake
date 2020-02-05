@@ -70,6 +70,7 @@ class _MyAppState extends State<MyApp> {
                   if (!_game.keyDownController.isClosed) {
                     _game.keyDownController.add(logicalKeyboardKey);
                   } else {
+                    //游戏结束后任意按键重新开始游戏
                     start();
                   }
                 },
