@@ -5,7 +5,7 @@ flutter-reactive-snake
 
 ![](./img/snake-demo.gif)
 
-### 构建环境，master Latest 
+构建环境，master Latest 
 ```
 flutter --version
 Flutter 1.1.2-pre.4740 • channel master • https://github.com/flutter/flutter.git
