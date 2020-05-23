@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'constants.dart';
 import 'game.dart';
@@ -27,6 +28,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     start();
+    RawKeyboard.instance.addListener(_rawKeyEvent);
   }
 
   void start() {
@@ -48,6 +50,7 @@ class _MyAppState extends State<MyApp> {
   void dispose() {
     super.dispose();
     _gameSubscription.cancel();
+    RawKeyboard.instance.removeListener(_rawKeyEvent);
   }
 
   @override
@@ -66,19 +69,25 @@ class _MyAppState extends State<MyApp> {
               alignment: Alignment.bottomCenter,
               margin: EdgeInsets.only(bottom: 100),
               child: GamePad(
-                onKeyDownEvent: (logicalKeyboardKey) {
-                  if (!_game.keyDownController.isClosed) {
-                    _game.keyDownController.add(logicalKeyboardKey);
-                  } else {
-                    //游戏结束后任意按键重新开始游戏
-                    start();
-                  }
-                },
+                onKeyDownEvent: _onKeyDownEvent,
               ),
             )
           ],
         ),
       ),
     );
+  }
+
+  void _rawKeyEvent(RawKeyEvent rawKeyEvent) {
+    _onKeyDownEvent(rawKeyEvent.logicalKey);
+  }
+
+  void _onKeyDownEvent(LogicalKeyboardKey logicalKeyboardKey) {
+    if (!_game.keyDownController.isClosed) {
+      _game.keyDownController.add(logicalKeyboardKey);
+    } else {
+      //游戏结束后任意按键重新开始游戏
+      start();
+    }
   }
 }
