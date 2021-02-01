@@ -60,14 +60,14 @@ class _MyAppState extends State<MyApp> {
         body: Stack(
           children: [
             Container(
-              margin: EdgeInsets.only(top: 100),
+              margin: const EdgeInsets.only(top: 100),
               alignment: Alignment.topCenter,
               child: SnakeGameWidget(_scene, _isGameOver,
-                  Size(GAME_WIDTH_PIXEL, GAME_HEIGHT_PIXEL)),
+                  const Size(GAME_WIDTH_PIXEL, GAME_HEIGHT_PIXEL)),
             ),
             Container(
               alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.only(bottom: 100),
+              margin: const EdgeInsets.only(bottom: 100),
               child: GamePad(
                 onKeyDownEvent: _onKeyDownEvent,
               ),

@@ -87,7 +87,7 @@ class Game {
     }, ListQueue<Point<int>>.from(SNAKE_INIT)).share();
 
     //🍎的状态
-    Stream<List<Point<int>>> _$apple = _snake$.scan(
+    Stream<List<Point<int>>> _apple$ = _snake$.scan(
         (List<Point<int>> apple, Queue<Point<int>> snake, int index) {
       var appleN = List<Point<int>>.from(apple);
       var random = Random();
@@ -132,7 +132,7 @@ class Game {
           return score + 1;
         }, -1);
 
-    return Rx.combineLatest3(_snake$, _$apple, _score$,
+    return Rx.combineLatest3(_snake$, _apple$, _score$,
         (Queue<Point<int>> snake, List<Point<int>> apple, int score) {
       return Scene(snake, apple, score);
     }).takeWhile((element) {
