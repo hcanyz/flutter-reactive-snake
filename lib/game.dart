@@ -15,7 +15,7 @@ class Game {
   Stream<Scene> createGame() {
     //数据更新频率流
     Stream<int> _ticks$ = Stream.periodic(Duration(milliseconds: TICKS_TICKS),
-        (computationCount) => computationCount);
+        (computationCount) => computationCount).share();
 
     //输入按键事件流,根据按键返回一个x,y方向变化值,过滤了无意义按键，过滤了与当前方向相同的按键，过滤了相反方向无效按键
     //初始化一个右箭头事件
@@ -80,7 +80,6 @@ class Game {
         //吃到了🍎，🐍的前进方向加一格
         snake.addLast(Point<int>((snake.last.x + direction["x"]) % GAME_WIDTH,
             (snake.last.y + direction["y"]) % GAME_HEIGHT));
-        //fixme 更好的办法解决吃🍎事件一直循环问题
         _snakeEatApple.add(null);
       }
       return snake;
